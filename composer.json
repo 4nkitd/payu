@@ -1,0 +1,25 @@
+{
+    "name": "dagar/payments",
+    "description": "support all major redirect payment aggregators",
+    "type": "composer-package",
+    "authors": [
+        {
+            "name": "Ankit Dagar",
+            "email": "ankit@dagar.in"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Dagar\\Payments\\": "src"
+        }
+    },
+    "extra": {
+        "laravel":{
+            "provider": [
+                "Dagar\\Payments\\PaymentsServiceProvider"
+            ]
+        }
+    }
+}
