@@ -1,5 +1,5 @@
 {
-    "name": "dagar/payments",
+    "name": "dagar/payu",
     "description": "support all major redirect payment aggregators",
     "type": "composer-package",
     "authors": [
@@ -12,13 +12,13 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "Dagar\\Payments\\": "src"
+            "Dagar\\PayU\\": "src"
         }
     },
     "extra": {
         "laravel":{
             "provider": [
-                "Dagar\\Payments\\PaymentsServiceProvider"
+                "Dagar\\PayU\\PaymentsServiceProvider"
             ]
         }
     }

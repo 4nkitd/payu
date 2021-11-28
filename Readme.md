@@ -15,7 +15,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('Dagar\Payments\PaymentGateway\PaymentGatewayContract', function ($app) {
+        $this->app->bind('Dagar\PayU\PaymentGateway\PaymentGatewayContract', function ($app) {
 
             return new PayU('KEY', "SECRET", true);
 
@@ -34,7 +34,7 @@ your constructor and passing routes
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Dagar\Payments\PaymentGateway\PaymentGatewayContract;
+use Dagar\PayU\PaymentGatewayContract;
 
 class PayNowController extends Controller
 {

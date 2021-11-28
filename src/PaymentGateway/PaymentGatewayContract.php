@@ -1,6 +1,6 @@
 <?php
 
-namespace Dagar\Payments\PaymentGateway;
+namespace Dagar\PayU\PaymentGateway;
 
 
 interface PaymentGatewayContract

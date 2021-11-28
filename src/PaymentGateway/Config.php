@@ -1,25 +1,35 @@
 <?php
 
-namespace Dagar\Payments\PaymentGateway\PayU;
+namespace Dagar\PayU\PaymentGateway;
 
 class Config {
 
-    private string $_TEST_URI = 'https://test.payu.in/_payment';
-    private string $_PROD_URI = 'https://secure.payu.in/_payment';
+    protected string $_TEST_URI = 'https://secure.payu.in/_payment';
+    protected string $_PROD_URI = 'https://test.payu.in/_payment';
 
-    private string $_TEST_PAYMENT_STATUS = "https://test.payu.in/merchant/postservice.php?form=2";
-    private string $_PROD_PAYMENT_STATUS = "https://info.payu.in/merchant/postservice.php?form=2";
+    protected string $_TEST_PAYMENT_STATUS= 'https://test.payu.in/merchant/postservice.php?form=2';
+    protected string $_PROD_PAYMENT_STATUS='https://info.payu.in/merchant/postservice.php?form=2';
 
-    private bool $_SUCCESS_RETURN_URL;
-    private bool $_FAILURE_RETURN_URL;
+    protected bool $_SUCCESS_RETURN_URL;
+    protected bool $_FAILURE_RETURN_URL;
 
-    private bool $_IS_PROD = True;
+    protected bool $_IS_PROD = True;
 
-    private string $merchantId;
-    private string $secretKey;
+    protected string $merchantId;
+    protected string $secretKey;
 
-    private int $discount = 0;
-    private int $fee = 0;
+    protected int $discount = 0;
+    protected int $fee = 0;
+
+    function __construct(){
+        $this->_TEST_URI = getenv('PAYU_TEST_URI');
+        $this->_PROD_URI = getenv('PAYU_PROD_URI');
+
+        $this->_TEST_PAYMENT_STATUS = getenv('TEST_API_URI');
+        $this->_PROD_PAYMENT_STATUS = getenv('PROD_API_URI');
+
+        $this->_IS_PROD = getenv('IS_PAYU_PROD');
+    }
 
     public function setProdUri(string $uri){
         return $this->_TEST_URI = $uri;
@@ -66,12 +76,12 @@ class Config {
 
     protected function getServiceUrl()
     {
-        return $this->_TEST_MODE ? $this->_TEST_URI : $this->_PROD_URI;
+        return $this->_IS_PROD ? $this->_TEST_URI : $this->_PROD_URI;
     }
 
     protected function getPaymentStatusApiUrl()
     {
-        return $this->_TEST_MODE ? $this->_TEST_PAYMENT_STATUS : $this->_PROD_PAYMENT_STATUS;
+        return $this->_IS_PROD ? $this->_TEST_PAYMENT_STATUS : $this->_PROD_PAYMENT_STATUS;
     }
 
     public function setURI(string $success, string $failure){
