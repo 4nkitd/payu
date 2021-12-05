@@ -1,8 +1,8 @@
 <?php
 
-namespace Dagar\PayU\PaymentGateway;
+namespace Dagar\PayU;
 
-class Config {
+class Genesis {
 
     protected string $_TEST_URI = 'https://secure.payu.in/_payment';
     protected string $_PROD_URI = 'https://test.payu.in/_payment';
@@ -29,6 +29,10 @@ class Config {
         $this->_PROD_PAYMENT_STATUS = getenv('PROD_API_URI');
 
         $this->_IS_PROD = getenv('IS_PAYU_PROD');
+    }
+
+    protected function _getViewLocation(){
+        return __DIR__ . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR;
     }
 
     public function setProdUri(string $uri){

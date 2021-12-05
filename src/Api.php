@@ -2,19 +2,24 @@
 
 namespace Dagar\PayU\PaymentGateway;
 
-use Dagar\PayU\PaymentGateway\PaymentGatewayContract;
-use Illuminate\Support\Facades\Http;
+use Dagar\PayU\Genesis;
+use Dagar\PayU\Contracts\PaymentGatewayContract;
+use Dagar\PayU\Resources\View;
+use GuzzleHttp\Client;
 
-class Api extends Config implements PaymentGatewayContract
+class Api extends Genesis implements PaymentGatewayContract
 {
-    public function __construct($merchantId, $secretKey, $testMode = False)
+    public function __construct($merchantId, $secretKey, $testMode = True)
     {
 
-        // parent::__construct();
+        parent::__construct();
 
         $this->merchantId = $merchantId;
         $this->secretKey = $secretKey;
         $this->_TEST_MODE = $testMode;
+
+        $this->_view = new View();
+
     }
 
     public function getChecksum(array $params)
@@ -70,14 +75,24 @@ class Api extends Config implements PaymentGatewayContract
             return htmlentities($param, ENT_QUOTES, 'UTF-8', false);
         }, $params);
 
+        $output = $this->_view->load('form', []);
 
+        $output .= sprintf('<form id="payment_form" method="POST" action="%s">', $this->getServiceUrl());
 
-        return view('payu::pay', [
-            "params" => $params,
-            'stripeKey' => config('cashier.key'),
-            'uri' => $this->getServiceUrl(),
-        ]);
+        foreach ($params as $key => $value) {
+            $output .= sprintf('<input type="hidden" name="%s" value="%s" />', $key, $value);
+        }
 
+        $output .= '<div id="redirect_info" style="display: none">Redirecting...</div>
+                    <input id="payment_form_submit" type="submit" value="Proceed to PayUMoney" />
+                </form>
+                <script>
+                    document.getElementById(\'redirect_info\').style.display = \'block\';
+                    document.getElementById(\'payment_form_submit\').style.display = \'none\';
+                    document.getElementById(\'payment_form\').submit();
+                </script>';
+
+        return $output;
     }
 
     public function verifyPaymentWithTxnID($transactionId)
@@ -86,14 +101,16 @@ class Api extends Config implements PaymentGatewayContract
         $hash_str = $this->merchantId . '|verify_payment|' . $transactionId . '|' . $this->secretKey;
         $hash = strtolower(hash('sha512', $hash_str));
 
-        $response = Http::post( $this->getPaymentStatusApiUrl(),[
-            'key' => $this->merchantId,
-            'hash' => $hash,
-            'var1' => $transactionId,
-            'command' => $command
-        ]);
+        $client = new Client();
 
-        return json_decode($response, true);
+        return $client->request('POST', $this->getPaymentStatusApiUrl(), [
+            'body' => [
+                'key' => $this->merchantId,
+                'hash' => $hash,
+                'var1' => $transactionId,
+                'command' => $command
+            ]
+        ]);
     }
 
 }

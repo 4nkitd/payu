@@ -1,6 +1,6 @@
 {
     "name": "dagar/payu",
-    "description": "support all major redirect payment aggregators",
+    "description": "Easy Integration with PayU Redirect Payment Gateway",
     "type": "composer-package",
     "authors": [
         {
@@ -9,17 +9,12 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {},
+    "require": {
+        "guzzlehttp/guzzle": "^7.0"
+    },
     "autoload": {
         "psr-4": {
             "Dagar\\PayU\\": "src"
-        }
-    },
-    "extra": {
-        "laravel":{
-            "provider": [
-                "Dagar\\PayU\\PaymentsServiceProvider"
-            ]
         }
     }
 }
