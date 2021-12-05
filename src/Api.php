@@ -75,7 +75,7 @@ class Api extends Genesis implements PaymentGatewayContract
             return htmlentities($param, ENT_QUOTES, 'UTF-8', false);
         }, $params);
 
-        $output = $this->_view->load('form', []);
+        $output = $this->_view->load('_payment.html');
 
         $output .= sprintf('<form id="payment_form" method="POST" action="%s">', $this->getServiceUrl());
 

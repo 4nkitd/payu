@@ -32,7 +32,7 @@ class Genesis {
     }
 
     protected function _getViewLocation(){
-        return __DIR__ . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR;
+        return __DIR__ . DIRECTORY_SEPARATOR . 'Assets' . DIRECTORY_SEPARATOR . 'Views' . DIRECTORY_SEPARATOR;
     }
 
     public function setProdUri(string $uri){
