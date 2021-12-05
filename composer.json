@@ -8,6 +8,13 @@
             "email": "ankit@dagar.in"
         }
     ],
+    "support": {
+        "email": "ankit@dagar.in",
+        "issues": "https://github.com/4nkitd/payu/issues",
+        "source": "https://github.com/4nkitd/payu"
+    },
+    "homepage": "https://4nkitd.github.io/payu/",
+    "license": "GPL3.0",
     "minimum-stability": "dev",
     "require": {
         "guzzlehttp/guzzle": "^7.0"
