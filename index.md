@@ -1,37 +1,124 @@
-## Welcome to GitHub Pages
+# Dagar/PayU
 
-You can use the [editor on GitHub](https://github.com/4nkitd/payu/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+# Reason of Existance
+Working with payment Gateways/aggregator's has become a common thing for me at office we work with almost all major payment gateway available in india. PayU, Razorpay & Stripe are at the top of our list. Razorpay  & Stripe has Phenomenally good sdks for all major languages/frameworks.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+But when it comes to payu it's like they don't care about dev tooling.
 
-### Markdown
+i build this for people new to payu integration . So that they can follow the standard process and also be productive in 30-40 mins of reading this repository. 
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## Future
+- will add features along the way.
 
-```markdown
-Syntax highlighted code block
+Note :-
+    specifics can be found in issues
 
-# Header 1
-## Header 2
-### Header 3
+# FEATURES
 
-- Bulleted
-- List
+    - Trigger payu redirect payment with ease.
+    
+    - Verify Payment Callback/Manually
 
-1. Numbered
-2. List
 
-**Bold** and _Italic_ and `Code` text
+## Import Package 
+```php
 
-[Link](url) and ![Image](src)
+use Dagar\PayU\PaymentGateway\Api;
 ```
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+## Create Class Instance
+```php
+$inst = new Api(
+    'KEY', # key provided by Team PayU
+    "SECRET", # secret provided by Team PayU
+    true # is test mode required
+);
 
-### Jekyll Themes
+```
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/4nkitd/payu/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+## Set Return uri routes
+```php
 
-### Support or Contact
+$inst->setURI($success_return_uri, $failure_return_uri);
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+```
+
+## Change Parameters after creating the instance
+```php
+
+$inst->setMerchantKey($string);
+$inst->setMerchantSecret($string);
+$inst->isProd($bool);
+
+$inst->setProdUri( $string ); 
+# https://secure.payu.in/_payment
+$inst->setTestUri( $string ); 
+# https://test.payu.in/_payment
+
+$inst->setTestPaymentVerifyUri( $string ); 
+# https://test.payu.in/merchant/postservice.php?form=2
+$inst->setProdPaymentVerifyUri( $string ); 
+# https://info.payu.in/merchant/postservice.php?form=2
+```
+
+# Set Fee / Discount
+```php
+
+$inst->setDiscount( 10 );
+$inst->setFee( 100 );
+
+```
+
+## Triger Payment
+
+```php
+
+$inst->createOrder(
+    $amount ?? 0 , 
+    $receipt_No ?? random_int(1,999),
+    [
+        'name' => 'test', # name of client
+        'email' => 'test@test.test', # name of client
+        'phone' => '9999999999', # name of client
+    ]
+); 
+
+```
+
+## Verify Callback Requests from PayU
+
+```php
+
+use Dagar\PayU\PaymentGateway\Api;
+
+// reverse hash checking is always recommended for security reason and discarding invalid requests
+
+$_RECEIVED_TXN_ID = $_POST['txnid'];
+
+//  sensitize and verify that this txnId was send from your system
+
+$inst = new Api(
+    'KEY', # key provided by Team PayU
+    "SECRET", # secret provided by Team PayU
+    true # is test mode required
+);
+
+$resp = $inst->verifyPaymentWithTxnID($_RECEIVED_TXN_ID);
+
+$resp['status'] // this is not the status of payment but the api response wether api request got executed correctly or not.
+
+if ($resp['status']==1) {
+
+    $txn_id = $resp['transaction_details'][$_RECEIVED_TXN_ID];
+    // get info about transaction here you can get to know a lot about about the transaction it is recommended that you keep this response on your server somewhere
+
+    $txn_id['net_amount_debit'];
+    // this will tell you how much about was paid by the end customer
+
+    $txn_id['status'] ?? $txn_id['unmappedstatus'];
+    //  these will tell you payment was a success or not # remember to check for both
+
+    //  update payment status
+
+}
+```
