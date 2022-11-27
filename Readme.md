@@ -1,4 +1,4 @@
-# Dagar/PayU
+# Dagar / PayU
 
 # Reason of Existance
 Working with payment Gateways/aggregator's has become a common thing for me at office we work with almost all major payment gateway available in india. PayU, Razorpay & Stripe are at the top of our list. Razorpay  & Stripe has Phenomenally good sdks for all major languages/frameworks.
